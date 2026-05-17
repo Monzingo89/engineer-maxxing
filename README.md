@@ -2,7 +2,7 @@
 
 Package-first repo intelligence tool for AI-heavy codebases.
 
-Latest release: **v1.0.3**
+Latest release: **v1.0.4**
 
 ## Use this as a package (not a cloned template)
 

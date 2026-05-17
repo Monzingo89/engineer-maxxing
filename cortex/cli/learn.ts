@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import path from "path";
 import { Command } from "commander";
 import { learn } from "../workflows/learn.workflow.js";

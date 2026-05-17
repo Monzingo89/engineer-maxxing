@@ -10,6 +10,11 @@ and this project follows [Semantic Versioning](https://semver.org/).
 ### Added
 - Placeholder for upcoming changes.
 
+## [1.0.4] - 2026-05-17
+
+### Fixed
+- CLI executable entrypoint now includes a Node shebang, resolving `npx @monzingo89/engineer-maxxing@1.0.3 --fresh` failures where shell attempted to execute ESM imports directly.
+
 ## [1.0.3] - 2026-05-17
 
 ### Added
@@ -66,7 +71,8 @@ and this project follows [Semantic Versioning](https://semver.org/).
 - Packaging and publish verification scripts (`verify:publish`, `prepublishOnly`).
 - Open-source project documentation (`README.md`) and licensing (`MIT`).
 
-[Unreleased]: https://github.com/Monzingo89/engineer-maxxing/compare/v1.0.3...HEAD
+[Unreleased]: https://github.com/Monzingo89/engineer-maxxing/compare/v1.0.4...HEAD
+[1.0.4]: https://github.com/Monzingo89/engineer-maxxing/releases/tag/v1.0.4
 [1.0.3]: https://github.com/Monzingo89/engineer-maxxing/releases/tag/v1.0.3
 [1.0.2]: https://github.com/Monzingo89/engineer-maxxing/releases/tag/v1.0.2
 [1.0.1]: https://github.com/Monzingo89/engineer-maxxing/releases/tag/v1.0.1
