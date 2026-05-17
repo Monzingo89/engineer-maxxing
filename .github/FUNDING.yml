@@ -1,0 +1,6 @@
+# Funding configuration for GitHub Sponsor button
+# https://docs.github.com/sponsors/receiving-sponsorships-through-github-sponsors/adding-a-sponsor-button-to-your-repository
+
+github: [Monzingo89]
+custom:
+  - "https://github.com/sponsors/Monzingo89"

@@ -79,6 +79,12 @@ npm run build
 npm run test
 ```
 
+## Funding ❤️
+
+If this project helps you clean up AI-generated repositories and keep long-running context stable, please consider sponsoring ongoing development.
+
+- GitHub Sponsors: https://github.com/sponsors/Monzingo89
+
 ## Publishing (dual registry)
 
 This package can be published to both registries:
