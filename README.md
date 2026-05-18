@@ -57,6 +57,23 @@ Use anatomy as your cleanup queue:
 
 Then apply fixes in your repo iteratively (small changes, re-run scanner, verify improvements).
 
+Generate an actionable cleanup plan from current anatomy:
+
+```bash
+npx @monzingo89/engineer-maxxing clean-repo
+```
+
+This writes:
+
+- `anatomy/CLEANUP_PLAN.md` (prioritized cleanup phases)
+- `anatomy/CLEANUP_DEAD_CODE_QUEUE.txt` (full dead-code candidate queue when present)
+
+You can also target another path:
+
+```bash
+npx @monzingo89/engineer-maxxing clean-repo --path /absolute/path/to/repo
+```
+
 ### 3) Develop features without drift
 
 Use:
@@ -65,6 +82,26 @@ Use:
 - `HEART` for feature planning across visual/frontend/backend/database/infrastructure
 
 This helps keep AI-assisted development aligned to standards and avoids repo drift over time.
+
+### 4) Reorganize to industry-standard structure
+
+Generate a reorganization plan that uses anatomy findings (including SRP/noise signals) and SOUL technology docs:
+
+```bash
+npx @monzingo89/engineer-maxxing reorganize-repo
+```
+
+This writes:
+
+- `anatomy/REORGANIZE_PLAN.md` (phased reorganization strategy)
+- `anatomy/REORGANIZE_MOVE_MAP.md` (source -> suggested target map)
+- updated `anatomy/HEART.md` (reorganization execution plan across all HEART sections)
+
+You can also target another path:
+
+```bash
+npx @monzingo89/engineer-maxxing reorganize-repo --path /absolute/path/to/repo
+```
 
 ## Quick start
 
@@ -108,6 +145,20 @@ npx @monzingo89/engineer-maxxing --fresh
 - `--quiet`: minimal output.
 - `--verbose`: detailed per-file output.
 - `--json-summary`: machine-readable summary.
+
+### `clean-repo` subcommand
+
+- `clean-repo [repoPath]`: generate an actionable cleanup plan using anatomy + `.cortex/context.json`.
+- `clean-repo --path <repoPath>`: explicit repository path.
+- `clean-repo --quiet`: suppress output.
+- `clean-repo --json-summary`: machine-readable summary.
+
+### `reorganize-repo` subcommand
+
+- `reorganize-repo [repoPath]`: generate a SIMPLIFY_REPO reorganization plan using anatomy + SOUL docs.
+- `reorganize-repo --path <repoPath>`: explicit repository path.
+- `reorganize-repo --quiet`: suppress output.
+- `reorganize-repo --json-summary`: machine-readable summary.
 
 ## For maintainers (this repo)
 

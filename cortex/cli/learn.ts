@@ -3,6 +3,8 @@
 import path from "path";
 import { Command } from "commander";
 import { learn } from "../workflows/learn.workflow.js";
+import { cleanRepo } from "../workflows/clean.workflow.js";
+import { reorganizeRepo } from "../workflows/reorganize.workflow.js";
 
 type CliOptions = {
   path?: string;
@@ -16,12 +18,35 @@ type CliOptions = {
   jsonSummary?: boolean;
 };
 
+type CleanCliOptions = {
+  path?: string;
+  quiet?: boolean;
+  jsonSummary?: boolean;
+};
+
+type ReorganizeCliOptions = {
+  path?: string;
+  quiet?: boolean;
+  jsonSummary?: boolean;
+};
+
 function parseCsv(value?: string): string[] {
   if (!value) return [];
   return value
     .split(",")
     .map((item) => item.trim())
     .filter(Boolean);
+}
+
+async function runInRepoRoot<T>(repoRoot: string, action: () => Promise<T>): Promise<T> {
+  const previousCwd = process.cwd();
+  process.chdir(repoRoot);
+
+  try {
+    return await action();
+  } finally {
+    process.chdir(previousCwd);
+  }
 }
 
 const program = new Command();
@@ -40,8 +65,9 @@ program
   .option("--verbose", "Print verbose per-file token usage output")
   .option("--json-summary", "Print final run summary as JSON")
   .action(async (repoPath: string | undefined, options: CliOptions) => {
-    const repoRootInput = options.path || repoPath || process.cwd();
-    const repoRoot = path.resolve(process.cwd(), repoRootInput);
+    const cwd = process.cwd();
+    const repoRootInput = options.path || repoPath || cwd;
+    const repoRoot = path.resolve(cwd, repoRootInput);
 
     const maxFileBytes = Number.parseInt(options.maxFileBytes, 10);
 
@@ -51,15 +77,63 @@ program
 
     const quiet = Boolean((options.quiet && !options.verbose) || (options.jsonSummary && !options.verbose));
 
-    const summary = await learn(repoRoot, {
-      maxFileBytes,
-      includeExt: parseCsv(options.includeExt),
-      excludeDirs: parseCsv(options.excludeDir),
-      repoModels: parseCsv(options.repoModels),
-      freshStart: Boolean(options.fresh),
-      quiet,
-      verbose: Boolean(options.verbose)
-    });
+    const summary = await runInRepoRoot(repoRoot, async () =>
+      learn(process.cwd(), {
+        maxFileBytes,
+        includeExt: parseCsv(options.includeExt),
+        excludeDirs: parseCsv(options.excludeDir),
+        repoModels: parseCsv(options.repoModels),
+        freshStart: Boolean(options.fresh),
+        quiet,
+        verbose: Boolean(options.verbose)
+      })
+    );
+
+    if (options.jsonSummary) {
+      process.stdout.write(`${JSON.stringify(summary, null, 2)}\n`);
+    }
+  });
+
+program
+  .command("clean-repo [repoPath]")
+  .description("Generate an actionable CLEAN_REPO plan from anatomy and .cortex context")
+  .option("--path <repoPath>", "Explicit repository path (overrides positional repoPath)")
+  .option("--quiet", "Suppress command output")
+  .option("--json-summary", "Print final run summary as JSON")
+  .action(async (repoPath: string | undefined, options: CleanCliOptions) => {
+    const cwd = process.cwd();
+    const repoRootInput = options.path || repoPath || cwd;
+    const repoRoot = path.resolve(cwd, repoRootInput);
+    const quiet = Boolean(options.quiet || options.jsonSummary);
+
+    const summary = await runInRepoRoot(repoRoot, async () =>
+      cleanRepo(process.cwd(), {
+        quiet
+      })
+    );
+
+    if (options.jsonSummary) {
+      process.stdout.write(`${JSON.stringify(summary, null, 2)}\n`);
+    }
+  });
+
+program
+  .command("reorganize-repo [repoPath]")
+  .description("Generate a SIMPLIFY_REPO reorganization plan from anatomy and SOUL technology docs")
+  .option("--path <repoPath>", "Explicit repository path (overrides positional repoPath)")
+  .option("--quiet", "Suppress command output")
+  .option("--json-summary", "Print final run summary as JSON")
+  .action(async (repoPath: string | undefined, options: ReorganizeCliOptions) => {
+    const cwd = process.cwd();
+    const repoRootInput = options.path || repoPath || cwd;
+    const repoRoot = path.resolve(cwd, repoRootInput);
+    const quiet = Boolean(options.quiet || options.jsonSummary);
+
+    const summary = await runInRepoRoot(repoRoot, async () =>
+      reorganizeRepo(process.cwd(), {
+        quiet
+      })
+    );
 
     if (options.jsonSummary) {
       process.stdout.write(`${JSON.stringify(summary, null, 2)}\n`);

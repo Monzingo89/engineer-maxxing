@@ -19,7 +19,9 @@ import { ContainerPlatform } from "../enums/container-platform.enum.js";
 import { RepoTask } from "../enums/repo-task.enum.js";
 import { RepoAuthorshipModel } from "../enums/repo-authorship-model.enum.js";
 
-const contextPath = path.join(process.cwd(), ".cortex", "context.json");
+function getContextPath() {
+  return path.join(process.cwd(), ".cortex", "context.json");
+}
 
 type Listener = (state: RepoBrainState) => void;
 
@@ -27,10 +29,12 @@ class GlobalContextStore {
   private listeners: Listener[] = [];
 
   private ensureContextDirectory() {
-    fs.mkdirSync(path.dirname(contextPath), { recursive: true });
+    fs.mkdirSync(path.dirname(getContextPath()), { recursive: true });
   }
 
   get(): RepoBrainState {
+    const contextPath = getContextPath();
+
     if (!fs.existsSync(contextPath)) {
       return createInitialRepoBrainState(process.cwd());
     }
@@ -41,6 +45,7 @@ class GlobalContextStore {
 
   set(state: RepoBrainState) {
     this.ensureContextDirectory();
+    const contextPath = getContextPath();
     const hydrated = hydrateRepoBrainState(state, process.cwd());
     fs.writeFileSync(contextPath, JSON.stringify(hydrated, null, 2), "utf8");
     this.listeners.forEach((listener) => listener(hydrated));
