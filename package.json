@@ -1,6 +1,6 @@
 {
   "name": "@monzingo89/engineer-maxxing",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Code-agnostic observable repo memory system.",
   "type": "module",
   "bin": {
